@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+# rhoerbe/docker-template@github 2016-07-15
+
+# data shared between containers goes via these definitions:
+dockervol_root='/docker_volumes'
+shareddata_root="${dockervol_root}/01shared_data"
+
+# configure container
+export IMGID='99'  # range from 02 .. 99; must be unique
+export IMAGENAME="r2h2/samlschema{IMGID}"
+export CONTAINERNAME="${IMGID}samlschema"
+export CONTAINERUSER="samlschema${IMGID}"   # group and user to run container
+export CONTAINERUID="80${IMGID}"     # gid and uid for CONTAINERUSER
+export BUILDARGS="
+    --build-arg "USERNAME=$CONTAINERUSER" \
+    --build-arg "UID=$CONTAINERUID" \
+"
+export ENVSETTINGS="
+    -e LOGDIR=/var/log
+    -e LOGLEVEL=INFO
+"
+
+export NETWORKSETTINGS="
+    --net dockernet
+    --ip 10.1.1.${IMGID}
+    -p 8080:8080
+"
+export VOLROOT="${dockervol_root}/$CONTAINERNAME"  # container volumes on docker host
+export VOLMAPPING="
+    -v $VOLROOT/etc/pki:/etc/pki:Z
+    -v $VOLROOT/var/log:/var/log:Z
+    -v $shareddata_root/www:/var/www:Z
+"
+
+# How to enable xclients in Docker containers: http://wiki.ros.org/docker/Tutorials/GUI
+#export ENVSETTINGS="$ENVSETTINGS
+#    -e DISPLAY=$DISPLAY
+#"
+#export VOLMAPPING="$VOLMAPPING
+#    -v /tmp/.X11-unix/:/tmp/.X11-unix:Z
+#"
+
+# enable Smartcard Reader in Docker
+# mounting var/lock/.., var/run to get around permission problems when starting non-root
+# --privileged mapping of usb devices allows a generic configreation without knowing the
+# USB device name. Alternativel, devices can be mapped using '--device'
+#export VOLMAPPING="$VOLMAPPING
+#    --privileged -v /dev/bus/usb:/dev/bus/usb
+#"
+
+export STARTCMD='/start.sh'
+
+# first start: create user/group/host directories
+if [ $(id -u) -ne 0 ]; then
+    sudo="sudo"
+fi
+if ! id -u $CONTAINERUSER &>/dev/null; then
+    $sudo groupadd -g $CONTAINERUID $CONTAINERUSER
+    $sudo adduser --gid $CONTAINERUID -M --uid $CONTAINERUID $CONTAINERUSER  #CentOS
+    #$sudo adduser --gid $CONTAINERUID --no-create-home --disabled-password --gecos "" --uid $CONTAINERUID $CONTAINERUSER #Debian
+fi
+
+# create dir with given user if not existing, relative to $HOSTVOLROOT
+function chkdir {
+    dir=$1
+    user=$2
+    $sudo mkdir -p "$VOLROOT/$dir"
+    $sudo chown -R $user:$user "$VOLROOT/$dir"
+}
+
+chkdir etc/pki $CONTAINERUSER
+chkdir var/log $CONTAINERUSER
+
+$sudo mkdir -p $shareddata_root/www
+$sudo chown -R $CONTAINERUSER:$CONTAINERUSER $shareddata_root/www
+
+# add settigns to start sshd
+#export NETWORKSETTINGS="$NETWORKSETTINGS -p 2022:2022"
+#export VOLMAPPING="$VOLMAPPING -v $VOLROOT/opt/ssh:/opt/ssh:Z"
