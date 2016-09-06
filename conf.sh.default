@@ -2,8 +2,8 @@
 # rhoerbe/docker-template@github 2016-07-15
 
 # data shared between containers goes via these definitions:
-dockervol_root='/docker_volumes'
-shareddata_root="${dockervol_root}/01shared_data"
+DOCKERVOL_ROOT='/docker_volumes'
+SHAREDDATA_ROOT="${DOCKERVOL_ROOT}/01shared_data"
 
 # configure container
 IMGID='99'  # range from 02 .. 99; must be unique
@@ -24,13 +24,12 @@ export ENVSETTINGS="
 export NETWORKSETTINGS="
     --net dockernet
     --ip 10.1.1.${IMGID}
-    -p 8080:8080
 "
-VOLROOT="${dockervol_root}/$CONTAINERNAME"  # container volumes on docker host
+VOLROOT="${DOCKERVOL_ROOT}/$CONTAINERNAME"  # container volumes on docker host
 export VOLMAPPING="
     -v $VOLROOT/etc/pki:/etc/pki:Z
     -v $VOLROOT/var/log:/var/log:Z
-    -v $shareddata_root/www:/var/www:Z
+    -v $SHAREDDATA_ROOT/www:/var/www:Z
 "
 
 export STARTCMD='/start.sh'
@@ -56,9 +55,5 @@ function chkdir {
 chkdir etc/pki $CONTAINERUSER
 chkdir var/log $CONTAINERUSER
 
-$sudo mkdir -p $shareddata_root/www
-$sudo chown -R $CONTAINERUSER:$CONTAINERUSER $shareddata_root/www
-
-# add settigns to start sshd
-#export NETWORKSETTINGS="$NETWORKSETTINGS -p 2022:2022"
-#export VOLMAPPING="$VOLMAPPING -v $VOLROOT/opt/ssh:/opt/ssh:Z"
+$sudo mkdir -p $SHAREDDATA_ROOT/www
+$sudo chown -R $CONTAINERUSER:$CONTAINERUSER $SHAREDDATA_ROOT/www
