@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
-# rhoerbe/docker-template@github 2016-07-15
 
-# data shared between containers goes via these definitions:
 DOCKERVOL_ROOT='/docker_volumes'
+# data shared between containers goes via these definitions:
 SHAREDDATA_ROOT="${DOCKERVOL_ROOT}/01shared_data"
 
 # configure container
 IMGID='99'  # range from 02 .. 99; must be unique
-PROJSHORT='samlschema'
+PROJSHORT='samlschtron'
 export IMAGENAME="r2h2/$PROJSHORT{IMGID}"
 export CONTAINERNAME="${IMGID}$PROJSHORT"
 export CONTAINERUSER="$PROJSHORT{IMGID}"   # group and user to run container
