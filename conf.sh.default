@@ -7,9 +7,9 @@ SHAREDDATA_ROOT="${DOCKERVOL_ROOT}/01shared_data"
 # configure container
 IMGID='99'  # range from 02 .. 99; must be unique
 PROJSHORT='samlschtron'
-export IMAGENAME="r2h2/$PROJSHORT{IMGID}"
+export IMAGENAME="r2h2/$PROJSHORT${IMGID}"
 export CONTAINERNAME="${IMGID}$PROJSHORT"
-export CONTAINERUSER="$PROJSHORT{IMGID}"   # group and user to run container
+export CONTAINERUSER="$PROJSHORT${IMGID}"   # group and user to run container
 export CONTAINERUID="80${IMGID}"     # gid and uid for CONTAINERUSER
 export BUILDARGS="
     --build-arg "USERNAME=$CONTAINERUSER" \
@@ -26,7 +26,7 @@ export NETWORKSETTINGS="
 "
 VOLROOT="${DOCKERVOL_ROOT}/$CONTAINERNAME"  # container volumes on docker host
 export VOLMAPPING="
-    -v $VOLROOT/etc/pki:/etc/pki:Z
+    -v $VOLROOT/etc/pki:/etc/pki:ro
     -v $VOLROOT/var/log:/var/log:Z
     -v $SHAREDDATA_ROOT/www:/var/www:Z
 "
@@ -45,13 +45,11 @@ fi
 
 # create dir with given user if not existing, relative to $HOSTVOLROOT
 function chkdir {
-    dir=$1
-    user=$2
+    dir=$1; user=$2
     $sudo mkdir -p "$VOLROOT/$dir"
     $sudo chown -R $user:$user "$VOLROOT/$dir"
 }
 
-chkdir etc/pki $CONTAINERUSER
 chkdir var/log $CONTAINERUSER
 
 $sudo mkdir -p $SHAREDDATA_ROOT/www
