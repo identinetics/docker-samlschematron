@@ -60,8 +60,8 @@ get_from_tarball() {
 get_from_ziparchive() {
     if [ ! -e $pkgroot/$pkgdir ] || [ "$update_pkg" == "True" ]; then
         echo "downloading $pkgdir into $pkgroot"
-        mkdir -p $pkgroot/$pkgdir
-        wget -qO- -O tmp.zip $pkgurl && unzip tmp.zip && rm tmp.zip
+        mkdir -p $pkgroot
+        wget -qO- -O tmp.zip $pkgurl && unzip -d "$pkgroot" tmp.zip && rm tmp.zip
     fi
 }
 
@@ -74,7 +74,10 @@ get_from_ziparchive() {
 
 # --- XMLSECTOOL ---
 pkgroot='install/opt'
-pkgdir='xmlsectool-2'
+pkgdir='xmlsectool'
 version='2.0.0'
 pkgurl="https://shibboleth.net/downloads/tools/xmlsectool/${version}/xmlsectool-${version}-bin.zip"
 get_from_ziparchive
+cd $pkgroot
+ln -s xmlsectool-${version} $pkgdir
+cd $OLDPWD

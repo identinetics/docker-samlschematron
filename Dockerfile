@@ -24,14 +24,12 @@ RUN git clone https://github.com/rhoerbe/saml_schematron.git . \
  && tar -xzf xalan-j_2_7_2-bin-2jars.tar.gz \
  && rm xalan-j_2_7_2-bin-2jars.tar.gz
 
-COPY install/opt/xmlsectool-2 /opt/saml_schematron/lib/xmlsectool-2
-RUN curl -O http://shibboleth.net/downloads/tools/xmlsectool/latest/$XMLSECARC \
- && unzip $XMLSECARC \
- && chown -R $USERNAME:$USERNAME /opt/saml_schematron \
- && chmod -R 750 /opt/saml_schematron
+COPY install/opt/xmlsectool /opt/saml_schematron/lib/xmlsectool
 
 COPY install/scripts/*.sh /
 RUN chmod +x /start.sh /opt/saml_schematron/scripts/*.sh
+ && chown -R $USERNAME:$USERNAME /opt/saml_schematron \
+ && chmod -R 750 /opt/saml_schematron
 
 # === startup web server
 EXPOSE 8080
