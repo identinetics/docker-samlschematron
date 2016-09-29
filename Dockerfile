@@ -32,6 +32,6 @@ RUN chmod +x /start.sh /opt/saml_schematron/scripts/*.sh \
  && chmod -R 750 /opt/saml_schematron
 
 # === startup web server
-EXPOSE 8080
+# EXPOSE 8080
 USER $USERNAME
 CMD ["/start.sh"]
