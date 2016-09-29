@@ -19,7 +19,6 @@ RUN groupadd -g $UID $USERNAME \
 
 WORKDIR /opt/saml_schematron
 RUN git clone https://github.com/rhoerbe/saml_schematron.git . \
-
  && curl -O https://www-eu.apache.org/dist/xalan/xalan-j/binaries/xalan-j_2_7_2-bin-2jars.tar.gz \
  && tar -xzf xalan-j_2_7_2-bin-2jars.tar.gz \
  && rm xalan-j_2_7_2-bin-2jars.tar.gz
