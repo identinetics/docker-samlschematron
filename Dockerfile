@@ -17,10 +17,9 @@ RUN groupadd -g $UID $USERNAME \
  && adduser -g $UID -u $UID $USERNAME \
  && mkdir -p /opt/saml_schematron
 
-WORKDIR /opt
-RUN git clone https://github.com/rhoerbe/saml_schematron.git .
 WORKDIR /opt/saml_schematron
-RUN ./build_prepare.sh \
+RUN git clone https://github.com/rhoerbe/saml_schematron.git . \
+ && ./build_prepare.sh \
  && python3.4 setup.py install \
  && curl -O https://www-eu.apache.org/dist/xalan/xalan-j/binaries/xalan-j_2_7_2-bin-2jars.tar.gz \
  && tar -xzf xalan-j_2_7_2-bin-2jars.tar.gz \
