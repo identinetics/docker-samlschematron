@@ -28,7 +28,7 @@ VOLROOT="${DOCKERVOL_ROOT}/$CONTAINERNAME"  # container volumes on docker host
 export VOLMAPPING="
     -v $VOLROOT/etc/pki:/etc/pki:ro
     -v $VOLROOT/var/log:/var/log:Z
-    -v $SHAREDDATA_ROOT/www:/var/www:Z
+    -v $SHAREDDATA_ROOT/$CONTAINERNAME/www/static:/export/static:Z
 "
 
 export STARTCMD='/start.sh'
@@ -52,5 +52,5 @@ function chkdir {
 
 chkdir var/log $CONTAINERUSER
 
-$sudo mkdir -p $SHAREDDATA_ROOT/www
-$sudo chown -R $CONTAINERUSER:$CONTAINERUSER $SHAREDDATA_ROOT/www
+$sudo mkdir -p $SHAREDDATA_ROOT/$CONTAINERNAME/www/static
+$sudo chown -R $CONTAINERUSER:$CONTAINERUSER $SHAREDDATA_ROOT/$CONTAINERNAME/www/static
