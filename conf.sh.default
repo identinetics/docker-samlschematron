@@ -11,6 +11,7 @@ export IMAGENAME="r2h2/$PROJSHORT${IMGID}"
 export CONTAINERNAME="${IMGID}$PROJSHORT"
 export CONTAINERUSER="$PROJSHORT${IMGID}"   # group and user to run container
 export CONTAINERUID="80${IMGID}"     # gid and uid for CONTAINERUSER
+export SHARED_CONTAINERS_GROUP="02nginx"   # volume shared with other containers
 export BUILDARGS="
     --build-arg "USERNAME=$CONTAINERUSER" \
     --build-arg "UID=$CONTAINERUID" \
@@ -43,7 +44,7 @@ if ! id -u $CONTAINERUSER &>/dev/null; then
     #$sudo adduser --gid $CONTAINERUID --no-create-home --disabled-password --gecos "" --uid $CONTAINERUID $CONTAINERUSER #Debian
 fi
 
-# create dir with given user if not existing, relative to $HOSTVOLROOT
+# create dir $1 with given user $2if not existing; set/repair ownership
 function chkdir {
     dir=$1; user=$2
     $sudo mkdir -p "$VOLROOT/$dir"
@@ -51,6 +52,7 @@ function chkdir {
 }
 
 chkdir var/log $CONTAINERUSER
+chkdir $CONTAINERNAME/www/static $CONTAINERUSER $SHARED_CONTAINERS_GROUP $SHAREDDATA_ROOT
 
 $sudo mkdir -p $SHAREDDATA_ROOT/$CONTAINERNAME/www/static
-$sudo chown -R $CONTAINERUSER:$CONTAINERUSER $SHAREDDATA_ROOT/$CONTAINERNAME/www/static
+$sudo chown -R $CONTAINERUSER:$SHARED_CONTAINERS_GROUP $SHAREDDATA_ROOT/$CONTAINERNAME/www/static
