@@ -2,11 +2,12 @@ FROM centos:centos7
 MAINTAINER r2h2 <rainer@hoerbe.at>
 
 # CentOS7 + prerequsites
-RUN yum -y install epel-release \
+RUN yum -y update \
+ && yum -y install epel-release \
  && yum -y install curl git ip lsof make net-tools unzip xmlstarlet \
  && yum -y install gcc libxslt-devel python-pip python34-devel \
- && yum -y install java-1.8.0-openjdk-devel.x86_64
-RUN yum -y clean all \
+ && yum -y install java-1.8.0-openjdk-devel.x86_64 \
+ && yum -y clean all \
  && curl https://bootstrap.pypa.io/get-pip.py | python3.4 \
  && pip3.4 install jinja2 lxml Werkzeug
 
