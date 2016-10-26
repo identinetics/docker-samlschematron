@@ -13,3 +13,6 @@ export NETWORKSETTINGS=""
 export VOLMAPPING=""
 
 export STARTCMD='/testRunner.sh'
+
+groupadd -g $CONTAINERUID $CONTAINERUSER
+$sudo adduser --gid $CONTAINERUID --no-create-home --disabled-password --gecos "" --uid $CONTAINERUID $CONTAINERUSER
