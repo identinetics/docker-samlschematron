@@ -14,5 +14,10 @@ export VOLMAPPING=""
 
 export STARTCMD='/testRunner.sh'
 
-groupadd -g $CONTAINERUID $CONTAINERUSER
-$sudo adduser --gid $CONTAINERUID --no-create-home --disabled-password --gecos "" --uid $CONTAINERUID $CONTAINERUSER
+if [ $(id -u) -ne 0 ]; then
+    sudo="sudo"
+fi
+if ! id -u $CONTAINERUSER &>/dev/null; then
+    $sudo groupadd -g $CONTAINERUID $CONTAINERUSER
+    $sudo adduser --gid $CONTAINERUID --no-create-home --disabled-password --gecos "" --uid $CONTAINERUID $CONTAINERUSER #Debian
+fi
