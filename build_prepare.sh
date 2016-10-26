@@ -52,7 +52,7 @@ get_or_update_repo() {
 get_from_tarball() {
     if [ ! -e $pkgroot/$pkgdir ] || [ "$update_pkg" == "True" ]; then
         echo "downloading $pkgdir into $pkgroot"
-        mkdir -p $pkgroot/$pkgdir && rm -rf $pkgroot/*
+        mkdir -p $pkgroot/$pkgdir && rm -rf $pkgroot/$pkgdir/*
         curl -L $pkgurl | tar -xz -C $pkgroot
     fi
 }
@@ -60,7 +60,7 @@ get_from_tarball() {
 get_from_ziparchive() {
     if [ ! -e $pkgroot/$pkgdir ] || [ "$update_pkg" == "True" ]; then
         echo "downloading $pkgdir into $pkgroot"
-        mkdir -p $pkgroot && rm -rf $pkgroot/*
+        mkdir -p $pkgroot && rm -rf $pkgroot/$pkgdir/*
         wget -qO- -O tmp.zip $pkgurl && unzip -d "$pkgroot" tmp.zip && rm tmp.zip
     fi
 }
@@ -80,4 +80,16 @@ pkgurl="https://shibboleth.net/downloads/tools/xmlsectool/${version}/xmlsectool-
 get_from_ziparchive
 cd $pkgroot
 ln -s xmlsectool-${version} $pkgdir
+cd $OLDPWD
+
+
+# --- PVZDjava ---
+# fetch/update when zip archive not found
+pkgroot='install/opt'
+pkgdir='pvzdjava'
+version='1.0'
+pkgurl="https://github.com/rhoerbe/PVZDjava/files/260806/pvzdjava_${version}.zip"
+get_from_ziparchive
+cd $pkgroot
+ln -s pvzdjava_${version} $pkgdir
 cd $OLDPWD

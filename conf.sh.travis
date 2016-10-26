@@ -2,7 +2,12 @@
 
 export CONTAINERNAME='samlschtron'
 export IMAGENAME="rhoerbe/$CONTAINERNAME"
-export BUILDARGS=""
+export CONTAINERUSER="schtron"
+export CONTAINERUID="3000"
+export BUILDARGS="
+    --build-arg "USERNAME=$CONTAINERUSER" \
+    --build-arg "UID=$CONTAINERUID" \
+"
 export ENVSETTINGS=""
 export NETWORKSETTINGS=""
 export VOLMAPPING=""

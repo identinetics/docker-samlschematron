@@ -1,4 +1,5 @@
 #!/bin/bash
 # run unit tests
 
-/usr/bin/run_unittests.sh
+cd /opt/source/saml_schematron/
+/test/run_unittests.sh
