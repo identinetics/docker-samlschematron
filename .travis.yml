@@ -16,9 +16,9 @@ before_script:
   - dscripts/build.sh
 
 script:
-  - docker run -u liveuser --hostname=pvzd-client --name=pvzd-client
+  - docker run -u liveuser --name=samlschtron
     -e USERNAME=liveuser -e UID=1000
-    rhoerbe/pvzd-client-app /test_noninteractive.sh
+    rhoerbe/samlschtron /testRunner.sh
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then
