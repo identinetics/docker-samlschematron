@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
-# rhoerbe/docker-template@github 2016-07-15
 
+DOCKERVOL_ROOT='/docker_volumes'
 # data shared between containers goes via these definitions:
-dockervol_root='/docker_volumes'
-shareddata_root="${dockervol_root}/01shared_data"
+SHAREDDATA_ROOT="${DOCKERVOL_ROOT}/01shared_data"
 
 # configure container
 IMGID='99'  # range from 02 .. 99; must be unique
-PROJSHORT='samlschema'
-export IMAGENAME="r2h2/$PROJSHORT$IMGID"
-export CONTAINERNAME="$IMGID$PROJSHORT"
-export CONTAINERUSER="$PROJSHORT$IMGID"   # group and user to run container
-export CONTAINERUID="80$IMGID"     # gid and uid for CONTAINERUSER
+PROJSHORT='samlschtron'
+export IMAGENAME="r2h2/$PROJSHORT${IMGID}"
+export CONTAINERNAME="${IMGID}$PROJSHORT"
+export CONTAINERUSER="$PROJSHORT${IMGID}"   # group and user to run container
+export CONTAINERUID="80${IMGID}"     # gid and uid for CONTAINERUSER
+export SHARED_CONTAINERS_GROUP="02nginx"   # volume shared with other containers
 export BUILDARGS="
     --build-arg "USERNAME=$CONTAINERUSER" \
     --build-arg "UID=$CONTAINERUID" \
@@ -24,13 +24,12 @@ export ENVSETTINGS="
 export NETWORKSETTINGS="
     --net dockernet
     --ip 10.1.1.${IMGID}
-    -p 8080:8080
 "
-VOLROOT="${dockervol_root}/$CONTAINERNAME"  # container volumes on docker host
+VOLROOT="${DOCKERVOL_ROOT}/$CONTAINERNAME"  # container volumes on docker host
 export VOLMAPPING="
-    -v $VOLROOT/etc/pki:/etc/pki:Z
+    -v $VOLROOT/etc/pki:/etc/pki:ro
     -v $VOLROOT/var/log:/var/log:Z
-    -v $shareddata_root/www:/var/www:Z
+    -v $SHAREDDATA_ROOT/$CONTAINERNAME/www/static:/export/static:Z
 "
 
 export STARTCMD='/start.sh'
@@ -45,20 +44,15 @@ if ! id -u $CONTAINERUSER &>/dev/null; then
     #$sudo adduser --gid $CONTAINERUID --no-create-home --disabled-password --gecos "" --uid $CONTAINERUID $CONTAINERUSER #Debian
 fi
 
-# create dir with given user if not existing, relative to $HOSTVOLROOT
+# create dir $1 with given user $2if not existing; set/repair ownership
 function chkdir {
-    dir=$1
-    user=$2
+    dir=$1; user=$2
     $sudo mkdir -p "$VOLROOT/$dir"
     $sudo chown -R $user:$user "$VOLROOT/$dir"
 }
 
-chkdir etc/pki $CONTAINERUSER
 chkdir var/log $CONTAINERUSER
+chkdir $CONTAINERNAME/www/static $CONTAINERUSER $SHARED_CONTAINERS_GROUP $SHAREDDATA_ROOT
 
-$sudo mkdir -p $shareddata_root/www
-$sudo chown -R $CONTAINERUSER:$CONTAINERUSER $shareddata_root/www
-
-# add settigns to start sshd
-#export NETWORKSETTINGS="$NETWORKSETTINGS -p 2022:2022"
-#export VOLMAPPING="$VOLMAPPING -v $VOLROOT/opt/ssh:/opt/ssh:Z"
+$sudo mkdir -p $SHAREDDATA_ROOT/$CONTAINERNAME/www/static
+$sudo chown -R $CONTAINERUSER:$SHARED_CONTAINERS_GROUP $SHAREDDATA_ROOT/$CONTAINERNAME/www/static

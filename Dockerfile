@@ -43,4 +43,5 @@ RUN chmod +x /start.sh /opt/saml_schematron/scripts/*.sh \
 # === startup backend system
 # EXPOSE 8080
 USER $USERNAME
+ENV PYTHON='python3.4'
 CMD ["/start.sh"]

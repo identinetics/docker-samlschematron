@@ -39,11 +39,9 @@ cd $workdir
 source ./conf${config_nr}.sh
 
 get_or_update_repo() {
-    if [ -e $repodir ] ; then
-        if [ "$update_pkg" == "True" ]; then
-            echo "updating $repodir"
-            cd $repodir && git pull && cd $OLDPWD
-        fi
+    if [ -e $repodir ] || [ "$update_pkg" == "True" ]; then
+        echo "updating $repodir"
+        cd $repodir && git pull && cd $OLDPWD
     else
         echo "cloning $repodir" \
         mkdir -p $repodir
@@ -52,35 +50,34 @@ get_or_update_repo() {
 }
 
 get_from_tarball() {
-    if [ ! -e $pkgroot/$pkgdir ]; then \
-        if [ "$update_pkg" == "True" ]; then
-            echo "downloading $pkgdir into $pkgroot"
-            mkdir $pkgroot/$pkgdir
-            curl -L $pkgurl | tar -xz -C $pkgroot
-        fi
+    if [ ! -e $pkgroot/$pkgdir ] || [ "$update_pkg" == "True" ]; then
+        echo "downloading $pkgdir into $pkgroot"
+        mkdir -p $pkgroot/$pkgdir
+        curl -L $pkgurl | tar -xz -C $pkgroot
     fi
 }
 
 get_from_ziparchive() {
-    if [ ! -e $pkgroot/$pkgdir ]; then
-        if [ "$update_pkg" == "True" ]; then
-            echo "downloading $pkgdir into $pkgroot"
-            mkdir $pkgroot/$pkgdir
-            wget -qO- -O tmp.zip $pkgurl && unzip tmp.zip && rm tmp.zip
-        fi
+    if [ ! -e $pkgroot/$pkgdir ] || [ "$update_pkg" == "True" ]; then
+        echo "downloading $pkgdir into $pkgroot"
+        mkdir -p $pkgroot
+        wget -qO- -O tmp.zip $pkgurl && unzip -d "$pkgroot" tmp.zip && rm tmp.zip
     fi
 }
 
-mkdir -p "$workdir/install/opt/"
+
+# --- saml-schematron/branch=master ---
+#repodir='install/opt/saml-schematron'
+#repourl='https://github.com/identinetics/saml-schematron'
+#get_or_update_repo
+#cd $repodir && git checkout master && cd $OLDPWD
 
 # --- XMLSECTOOL ---
-repodir='xmlsectool-2'
+pkgroot='install/opt'
+pkgdir='xmlsectool'
 version='2.0.0'
-cd "$workdir/install/opt/"
-if [ ! -e $repodir ]; then
-    echo "downloading xmlsectool-${version}-bin.zip"
-    wget "https://shibboleth.net/downloads/tools/xmlsectool/${version}/xmlsectool-${version}-bin.zip"
-    unzip "xmlsectool-${version}-bin.zip"
-    ln -s "xmlsectool-${version}" $repodir
-    rm "xmlsectool-${version}-bin.zip"
-fi
+pkgurl="https://shibboleth.net/downloads/tools/xmlsectool/${version}/xmlsectool-${version}-bin.zip"
+get_from_ziparchive
+cd $pkgroot
+ln -s xmlsectool-${version} $pkgdir
+cd $OLDPWD

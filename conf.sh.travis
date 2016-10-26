@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+export CONTAINERNAME='samlschtron'
+export IMAGENAME="rhoerbe/$CONTAINERNAME"
+export BUILDARGS=""
+export ENVSETTINGS=""
+export NETWORKSETTINGS=""
+export VOLMAPPING=""
+
+export STARTCMD='/testRunner.sh'
