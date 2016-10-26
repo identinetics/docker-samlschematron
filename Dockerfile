@@ -24,7 +24,7 @@ ENV XMLSECTOOL=/opt/xmlsectool/xmlsectool.sh
 # 2016-10-26: cython 0.25 is breaking pyjnius (https://github.com/kivy/pyjnius/issues/244)
 RUN $PIP install Cython==0.24 \
  && mkdir -p /opt/source/ \
- && git clone https://github.com/kivy/pyjnius.git /opt/source/pyjnius/ \
+ && git clone https://github.com/identinetics/pyjnius.git /opt/source/pyjnius/ \
  && cd /opt/source/pyjnius/ && $PYTHON setup.py install
 
 # SAMLschematron install option Github:
