@@ -16,7 +16,7 @@ before_script:
   - dscripts/build.sh
 
 script:
-  - docker run -u liveuser --name=samlschtron
+  - docker run -u 3000 --name=samlschtron
     -e USERNAME=liveuser -e UID=1000
     rhoerbe/samlschtron /testRunner.sh
 
