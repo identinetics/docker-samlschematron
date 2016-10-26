@@ -29,11 +29,12 @@ RUN git clone https://github.com/rhoerbe/saml_schematron.git . \
 COPY install/opt/xmlsectool /opt/saml_schematron/lib/xmlsectool
 
 COPY install/scripts/*.sh /
-RUN chmod +x /start.sh /opt/saml_schematron/scripts/*.sh \
+RUN chmod +x /start.sh /*.sh \
  && chown -R $USERNAME:$USERNAME /opt/saml_schematron \
  && chmod -R 750 /opt/saml_schematron
 
 # === startup web server
 # EXPOSE 8080
 USER $USERNAME
+ENV PYTHON='python3.4'
 CMD ["/start.sh"]
