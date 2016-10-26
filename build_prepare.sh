@@ -39,13 +39,13 @@ cd $workdir
 source ./conf${config_nr}.sh
 
 get_or_update_repo() {
-    if [ -e $repodir ] || [ "$update_pkg" == "True" ]; then
-        echo "updating $repodir"
-        cd $repodir && git pull && cd $OLDPWD
-    else
+    if [ ! -e $repodir ]; then
         echo "cloning $repodir" \
         mkdir -p $repodir
         git clone $repourl $repodir
+    elif [ "$update_pkg" == "True" ]; then
+        echo "updating $repodir"
+        cd $repodir && git pull && cd $OLDPWD
     fi
 }
 
@@ -67,10 +67,10 @@ get_from_ziparchive() {
 
 
 # --- saml-schematron/branch=master ---
-#repodir='install/opt/saml-schematron'
-#repourl='https://github.com/identinetics/saml-schematron'
-#get_or_update_repo
-#cd $repodir && git checkout master && cd $OLDPWD
+repodir='install/opt/saml_schematron'
+repourl='https://github.com/identinetics/saml_schematron'
+get_or_update_repo
+cd $repodir && git checkout master && cd $OLDPWD
 
 # --- XMLSECTOOL ---
 pkgroot='install/opt'

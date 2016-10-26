@@ -27,12 +27,12 @@ RUN $PIP install Cython==0.24 \
  && git clone https://github.com/kivy/pyjnius.git /opt/source/pyjnius/ \
  && cd /opt/source/pyjnius/ && $PYTHON setup.py install
 
-# SAMLschematron install options: Github Reop or PyPi:
-RUN mkdir -p /opt/source/saml_schematron/
+# SAMLschematron install option Github:
+COPY install/opt/saml_schematron /opt/source/saml_schematron
+COPY install/opt/pvzdjava/pvzdValidateXsd.jar /opt/source/saml_schematron/lib/pvzdValidateXsd.jar
 WORKDIR /opt/source/saml_schematron
-RUN git clone https://github.com/identinetics/saml_schematron.git .
-COPY install/opt/pvzdjava/pvzdValidateXsd.jar lib/pvzdValidateXsd.jar
 RUN $PYTHON setup.py install
+# SAMLschematron install option PyPi:
 #RUN pip install SAMLschtron
 #WORKDIR /opt/saml_schematron/rules/schtron_src
 #RUN mkdir -p ../schtron_xsl && make
