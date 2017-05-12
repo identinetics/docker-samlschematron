@@ -39,7 +39,7 @@ RUN $PYTHON setup.py install
 
 # Application will run as a non-root user/group that must map to the docker host
 ARG USERNAME=schtron
-ARG UID=3000
+ARG UID=343004
 RUN groupadd -g $UID $USERNAME \
  && adduser -g $UID -u $UID $USERNAME
 
