@@ -38,8 +38,8 @@ set_image_and_container_name() {
     IMGID='04'  # range from 02 .. 99; must be unique per node (registered in github.com/identinetics/dscripts/templates/assigned-uids.adoc)
     PROJSHORT='samlschtron'
     set_staging_env
-    export IMAGENAME="r2h2/${PROJSHORT}"  # you may or may not want to have an image id and/or staging tag
-    #export IMAGENAME="r2h2/${PROJSHORT}${IMGID}:${STAGING_ENV}"  # [a-z_0-9]
+    export IMAGENAME="rhoerbe/${PROJSHORT}"  # you may or may not want to have an image id and/or staging tag
+    #export IMAGENAME="rhoerbe/${PROJSHORT}${IMGID}:${STAGING_ENV}"  # [a-z_0-9]
     export CONTAINERNAME="${IMGID}${PROJSHORT}"
     #export CONTAINERNAME="${IMGID}${PROJSHORT}-${STAGING_ENV}"
     export DOCKER_REGISTRY='index.docker.io'
@@ -105,8 +105,6 @@ set_vol_mapping() {
     # it is good practice to map each VOLUME from the Dockerfile
     map_docker_volume "${CONTAINERNAME}.etc_pki" '/etc/pki' 'ro' $DOCKERVOL_SHORT
     map_docker_volume "${CONTAINERNAME}.var_log" '/var/log' 'Z' $DOCKERLOG_SHORT
-	chown -R $CONTAINERUSER:$CONTAINERUSER $DOCKERVOL_SHORT/${CONTAINERNAME}.etc_pki
-	chown -R $CONTAINERUSER:$CONTAINERUSER $DOCKERLOG_SHORT/${CONTAINERNAME}.var_log
 
     SHAREDDATA_ROOT="${DOCKERVOL_ROOT}/01shared_data"
     map_host_directory "$SHAREDDATA_ROOT/www/static" '/export/static' 'z'
