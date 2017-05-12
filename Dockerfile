@@ -45,7 +45,7 @@ RUN groupadd -g $UID $USERNAME \
 
 COPY install/scripts/*.sh /
 RUN chmod +x /start.sh /*.sh \
- && chown -R $USERNAME:$USERNAME /opt/source/saml_schematron \
+ && chown -R $USERNAME:$USERNAME /etc/pki /opt/source/saml_schematron /var/log \
  && chmod -R 750 /opt/source/saml_schematron
 
 # === startup backend system
