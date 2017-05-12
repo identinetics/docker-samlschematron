@@ -105,7 +105,8 @@ set_vol_mapping() {
     # it is good practice to map each VOLUME from the Dockerfile
     map_docker_volume "${CONTAINERNAME}.etc_pki" '/etc/pki' 'ro' $DOCKERVOL_SHORT
     map_docker_volume "${CONTAINERNAME}.var_log" '/var/log' 'Z' $DOCKERLOG_SHORT
-	chown -R $CONTAINERUSER:$CONTAINERUSER $DOCKERVOL_SHORT/${CONTAINERNAME}.*
+	chown -R $CONTAINERUSER:$CONTAINERUSER $DOCKERVOL_SHORT/${CONTAINERNAME}.etc_pki
+	chown -R $CONTAINERUSER:$CONTAINERUSER $DOCKERLOG_SHORT/${CONTAINERNAME}.var_log
 
     SHAREDDATA_ROOT="${DOCKERVOL_ROOT}/01shared_data"
     map_host_directory "$SHAREDDATA_ROOT/www/static" '/export/static' 'z'

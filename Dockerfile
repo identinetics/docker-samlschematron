@@ -49,7 +49,8 @@ RUN chmod +x /start.sh /*.sh \
  && chmod -R 750 /opt/source/saml_schematron
 
 # === startup backend system
-# EXPOSE 8080
+EXPOSE 8080
+VOLUME /etc/pki /var/log
 USER $USERNAME
 ENV PYTHON='python3.4'
 CMD ["/start.sh"]
