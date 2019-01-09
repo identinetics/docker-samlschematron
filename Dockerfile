@@ -11,7 +11,8 @@ RUN yum -y update \
  && yum -y install java-1.8.0-openjdk-devel.x86_64 \
  && yum -y clean all \
  && curl https://bootstrap.pypa.io/get-pip.py | $PYTHON \
- && $PIP install jinja2 lxml Werkzeug
+ && $PIP install cython \
+ && $PIP install jinja2 lxml pyjnius Werkzeug
 
 RUN curl -O https://www-eu.apache.org/dist/xalan/xalan-j/binaries/xalan-j_2_7_2-bin-2jars.tar.gz \
  && tar -xzf xalan-j_2_7_2-bin-2jars.tar.gz \
