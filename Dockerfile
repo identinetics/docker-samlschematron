@@ -1,4 +1,4 @@
-FROM centos:centos7
+FROM centos:7
 MAINTAINER r2h2 <rainer@hoerbe.at>
 
 # CentOS7 + prerequsites
