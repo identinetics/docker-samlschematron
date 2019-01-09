@@ -21,12 +21,7 @@ pipeline {
             steps {
                 sh '''#!/bin/bash -e
                     echo "using ${compose_cfg} as docker-compose config file"
-                    if [[ "$DOCKER_REGISTRY_USER" ]]; then
-                        echo "  Docker registry user: $DOCKER_REGISTRY_USER"
-                        ./dcshell/update_config.sh "${compose_cfg}.default" $compose_cfg
-                    else
-                        cp "${compose_cfg}.default" $compose_cfg
-                    fi
+                    cp "${compose_cfg}.default" $compose_cfg
                     egrep '( image:| container_name:)' $compose_cfg || echo "missing keys in ${compose_cfg}"
                 '''
             }

@@ -1,6 +1,8 @@
-version: "2"
+version: "3.4"
 services:
   samlschtron:
+    build:
+      context: .
     image: r2h2/samlschematron
     labels:
       x.service: "SAML metadata validation service"
@@ -14,9 +16,10 @@ services:
       - 04samlschtron.etc_pki:/etc/pki:Z
       - 04samlschtron.var_log:/var/log:Z
 networks:
-  doverlay:
+  dfrontend:
     external: true
 volumes:
   04samlschtron.etc_pki:
+    name: 04samlschtron.etc_pki
   04samlschtron.var_log:
-
+    name: 04samlschtron.var_log

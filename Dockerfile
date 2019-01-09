@@ -20,16 +20,11 @@ RUN curl -O https://www-eu.apache.org/dist/xalan/xalan-j/binaries/xalan-j_2_7_2-
 COPY install/opt/xmlsectool /opt/xmlsectool
 ENV XMLSECTOOL=/opt/xmlsectool/xmlsectool.sh
 
-# use pyJNIus as Python/Java bridge
-# 2016-10-26: cython 0.25 is breaking pyjnius (https://github.com/kivy/pyjnius/issues/244)
-RUN $PIP install Cython==0.24 \
- && mkdir -p /opt/source/ \
- && git clone https://github.com/identinetics/pyjnius.git /opt/source/pyjnius/ \
- && cd /opt/source/pyjnius/ && $PYTHON setup.py install
+RUN $PIP install Cython>=0.25
 
 # SAMLschematron install option Github:
 COPY install/opt/saml_schematron /opt/source/saml_schematron
-COPY install/opt/pvzdjava/pvzdValidateXsd.jar /opt/source/saml_schematron/lib/pvzdValidateXsd.jar
+COPY install/opt/pvzdlib/PVZDjava/pvzdValidateXsd.jar /opt/source/saml_schematron/lib/pvzdValidateXsd.jar
 WORKDIR /opt/source/saml_schematron
 RUN $PYTHON setup.py install
 # SAMLschematron install option PyPi:
