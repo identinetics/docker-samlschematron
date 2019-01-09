@@ -1,0 +1,3 @@
+[submodule "install/opt/saml_schematron"]
+	path = install/opt/saml_schematron
+	url = https://github.com/identinetics/saml_schematron
