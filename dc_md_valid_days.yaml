@@ -1,0 +1,22 @@
+version: "3.4"
+services:
+  metadata_valid_days:
+    image: r2h2/samlschematron
+    container_name: metadata_valid_days
+    command: /opt/bin/metadata_valid_days.sh
+    environment:
+      - MD_AGGREGATE_URL=http://mdfeed.test.portalverbund.gv.at/metadata.xml
+      - MD_VALID_DAYS_OUT=/tmp/samlschematron/metadata_valid_days.txt
+    volumes:
+      - 04samlschtron.etc_pki:/etc/pki:Z
+      - 04samlschtron.var_log:/var/log:Z
+      - 10pyff.var_md_feed:/var/md_feed:Z
+      - /tmp/samlschematron/:/tmp/samlschematron:Z
+
+volumes:
+  10pyff.var_md_feed:
+    name: dc_10pyff.var_md_feed
+  04samlschtron.etc_pki:
+    name: 04samlschtron.etc_pki
+  04samlschtron.var_log:
+    name: 04samlschtron.var_log
